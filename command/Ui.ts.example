@@ -1,0 +1,39 @@
+import { Luz } from "./Luz";
+const App: React.FC = () => {
+  const [estadoLuz, setEstadoLuz] = useState<boolean>(false);
+
+  // Esses objetos normalmente não seriam recriados em cada render
+  const luz = new Luz();
+  const controle = new ControleRemoto();
+
+  const ligar = () => {
+    const comando = new LigarLuzCommand(luz);
+    controle.setCommand(comando);
+    controle.pressionarBotao();
+    setEstadoLuz(luz.estaLigada());
+  };
+
+  const desligar = () => {
+    const comando = new DesligarLuzCommand(luz);
+    controle.setCommand(comando);
+    controle.pressionarBotao();
+    setEstadoLuz(luz.estaLigada());
+  };
+
+  const desfazer = () => {
+    controle.desfazerUltimo();
+    setEstadoLuz(luz.estaLigada());
+  };
+
+  return (
+    <div style={{ padding: 20 }}>
+      <h1>Controle da Luz (Command Pattern)</h1>
+      <p>Status: {estadoLuz ? '💡 Ligada' : '💤 Desligada'}</p>
+      <button onClick={ligar}>Ligar</button>
+      <button onClick={desligar}>Desligar</button>
+      <button onClick={desfazer}>Desfazer</button>
+    </div>
+  );
+};
+
+export default App;
